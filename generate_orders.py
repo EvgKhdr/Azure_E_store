@@ -48,8 +48,8 @@ def multiple_orders_generation(seed):
         orders_df.loc[i, 'Payment method'] = payment_method
         orders_df.loc[i, 'Shipping fee'] = shipping_fee
         orders_df.loc[i, 'Time_of_completion'] = time_of_completion
-        
-    orders_df.to_csv('orders.csv', header = True, index = False)
+    
+    return orders_df 
     
     
         
