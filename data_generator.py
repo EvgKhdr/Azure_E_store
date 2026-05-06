@@ -25,14 +25,14 @@ NUMBER_OF_CUSTOMERS = 200
 NUMBER_OF_PRODUCTS = 50
 NUMBER_OF_EVENTS = 2000
 sleep_time = 30 #in seconds, delay between batches upload
-NUMBER_OF_BATCHES = 10 # how many batches will be uploaded into the Azure storage
+NUMBER_OF_BATCHES = 1 # how many batches will be uploaded into the Azure storage
 seeds_list = list(range(starting_seed, starting_seed+NUMBER_OF_BATCHES))
 
 def upload_to_azure(name, config, SEED):
     buffer = io.BytesIO()
-    config['df'].to_parquet(buffer, index=False, engine='pyarrow', compression='snappy')
+    config['df'].to_csv(buffer, index=False)
     buffer.seek(0)
-    blob_name = f"{config['path']}{name}_raw_{SEED}.parquet"
+    blob_name = f"{config['path']}{name}_raw_{SEED}.csv"
     blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name)
     try:
         blob_client.upload_blob(buffer, overwrite=True)
