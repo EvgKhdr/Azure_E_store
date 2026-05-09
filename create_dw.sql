@@ -9,7 +9,7 @@ CREATE TABLE dw.time(
     hour INT NOT NULL,
     minute INT NOT NULL,
     second INT NOT NULL,
-    time_of_day VARCHAR(10) CHECK (time_of_day IN ('Morning', 'Afternoon', 'Evening', 'Night')) NOT NULL
+    time_of_day VARCHAR(10) CHECK (time_of_day IN('Morning', 'Afternoon', 'Evening', 'Night')) NOT NULL
 
 )
 GO
@@ -34,7 +34,7 @@ CREATE TABLE dw.customer_d(
     age INT NOT NULL CHECK (age >= 16 AND age <= 100),
     age_group VARCHAR(15) CHECK (age_group IN('Young','Middle-aged', 'Adult', 'Senior')),
     email VARCHAR(60),
-    gender VARCHAR(6) CHECK (gender IN("Male", "Female")),
+    gender VARCHAR(6) CHECK (gender IN('Male', 'Female')),
     country VARCHAR(30),
     city VARCHAR(40),
     account_age INT NOT NULL,
@@ -48,8 +48,8 @@ CREATE TABLE dw.product_d(
     product_id INT IDENTITY(1, 1) NOT NULL PRIMARY KEY,
     product_bk VARCHAR(12) NOT NULL,
     name VARCHAR(50) NOT NULL,
-    category VARCHAR(15) NOT NULL DEFAULT "Other",
-    brand VARCHAR(15) NOT NULL DEFAULT "Unknown",
+    category VARCHAR(15) NOT NULL DEFAULT 'Other',
+    brand VARCHAR(15) NOT NULL DEFAULT 'Unknown',
     price DECIMAL(5,2) NOT NULL,
     cost DECIMAL(5,2) NOT NULL,
     rating DECIMAL(5,2) NOT NULL DEFAULT 0 CHECK (rating >= 0 AND rating <= 5),
@@ -81,7 +81,7 @@ GO
 CREATE TABLE dw.order_attr_d(
     order_attr_id INT IDENTITY(1, 1) NOT NULL PRIMARY KEY,
     delivery VARCHAR(20) CHECK (delivery IN('Courier', 'Post', 'Pickup Point', 'Pickup Locker')) NOT NULL,
-    payment VARCHAR(20) CHECK (payment IN ('Apple_pay', 'Debit_card', 'Cash_on_delivery','Bank_transfer')) NOT NULL,
+    payment VARCHAR(20) CHECK (payment IN ('Apple Pay', 'Debit card', 'Cash on delivery','Bank transfer')) NOT NULL,
     session VARCHAR(15) NOT NULL,
     source_file_name VARCHAR(255)
 )
@@ -105,3 +105,7 @@ CREATE TABLE dw.order_f(
 )
 
 GO
+
+DROP TABLE dw.date;
+DROP TABLE dw.time;
+DROP SCHEMA dw;
