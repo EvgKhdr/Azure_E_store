@@ -1,4 +1,4 @@
-TRUNCATE TABLE dw.time_d;
+
 WITH 
 t10 AS (SELECT n FROM (VALUES (0),(1),(2),(3),(4),(5),(6),(7),(8),(9)) v(n)),
 SecondsSequence AS (

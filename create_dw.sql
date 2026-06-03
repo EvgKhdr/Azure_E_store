@@ -5,7 +5,7 @@ GO
 
 CREATE TABLE dw.time_d(
     time_id INT IDENTITY(1, 1) NOT NULL PRIMARY KEY,
-    full_time TIME NOT NULL,
+    full_time VARCHAR(8) NOT NULL,
     hour INT NOT NULL,
     minute INT NOT NULL,
     second INT NOT NULL,
@@ -57,8 +57,8 @@ GO
 
 CREATE TABLE dw.event_attr_d(
     event_attr_id INT IDENTITY(1, 1) NOT NULL PRIMARY KEY,
-    type VARCHAR(10) CHECK (type IN ('click','add to cart','checkout','purchase')),
-    medium VARCHAR(10) CHECK (medium IN ('app', 'chrome', 'edge', 'firefox', 'safari')),
+    type VARCHAR(15) NOT NULL,
+    medium VARCHAR(10) NOT NULL,
     session_id VARCHAR(15) NOT NULL
 )
 GO 
@@ -68,16 +68,16 @@ CREATE TABLE dw.event_f(
     event_bk VARCHAR(13) NOT NULL,
     product_id INT FOREIGN KEY REFERENCES dw.product_d(product_id),
     customer_id INT FOREIGN KEY REFERENCES dw.customer_d(customer_id),
-    event_time INT FOREIGN KEY REFERENCES dw.time(time_id),
-    event_date INT FOREIGN KEY REFERENCES dw.date(date_id),
+    event_time INT FOREIGN KEY REFERENCES dw.time_d(time_id),
+    event_date INT FOREIGN KEY REFERENCES dw.date_d(date_id),
     event_attr_id INT FOREIGN KEY REFERENCES dw.event_attr_d(event_attr_id)
 )
 GO
 
 CREATE TABLE dw.order_attr_d(
     order_attr_id INT IDENTITY(1, 1) NOT NULL PRIMARY KEY,
-    delivery VARCHAR(20) CHECK (delivery IN('Courier', 'Post', 'Pickup Point', 'Pickup Locker')) NOT NULL,
-    payment VARCHAR(20) CHECK (payment IN ('Apple Pay', 'Debit card', 'Cash on delivery','Bank transfer')) NOT NULL,
+    delivery VARCHAR(20) NOT NULL,
+    payment VARCHAR(20) NOT NULL,
     session VARCHAR(15) NOT NULL
 )
 GO
@@ -86,13 +86,13 @@ CREATE TABLE dw.order_f(
     order_id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
     order_bk VARCHAR(9) NOT NULL,
     quantity INT NOT NULL,
-    discount INT NOT NULL,
+    discount DECIMAL(2,1) NOT NULL,
     profit DECIMAL(8,2) NOT NULL,
     total_cost DECIMAL (8,2) NOT NULL,
     shipping DECIMAL(6,2) NOT NULL,
     time_of_completion_hours INT NOT NULL,
-    order_date INT FOREIGN KEY REFERENCES dw.date(date_id),
-    order_time INT FOREIGN KEY REFERENCES dw.time(time_id),
+    order_date INT FOREIGN KEY REFERENCES dw.date_d(date_id),
+    order_time INT FOREIGN KEY REFERENCES dw.time_d(time_id),
     product_id INT FOREIGN KEY REFERENCES dw.product_d(product_id),
     customer_id  INT FOREIGN KEY REFERENCES dw.customer_d(customer_id),
     order_attr_id  INT FOREIGN KEY REFERENCES dw.order_attr_d(order_attr_id)
@@ -100,6 +100,15 @@ CREATE TABLE dw.order_f(
 
 GO
 
-DROP TABLE dw.date;
-DROP TABLE dw.time;
-DROP SCHEMA dw;
+
+DROP TABLE IF EXISTS dw.order_f;
+DROP TABLE IF EXISTS dw.event_f;
+
+DROP TABLE IF EXISTS dw.order_attr_d;
+DROP TABLE IF EXISTS dw.event_attr_d;
+DROP TABLE IF EXISTS dw.product_d;
+DROP TABLE IF EXISTS dw.customer_d;
+DROP TABLE IF EXISTS dw.date_d;
+DROP TABLE IF EXISTS dw.time_d;
+
+

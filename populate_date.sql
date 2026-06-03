@@ -1,7 +1,6 @@
 DECLARE @StartDate DATE = '2022-01-01';
 DECLARE @EndDate DATE = '2027-01-01';
 
-TRUNCATE TABLE dw.date_d;
 
 WITH DateSequence AS (
     SELECT @StartDate AS CurrentDate
@@ -10,7 +9,7 @@ WITH DateSequence AS (
     FROM DateSequence
     WHERE CurrentDate < @EndDate
 )
-INSERT INTO dw.date (full_date, [year], [month], [date], time_of_year, [weekday], is_weekend)
+INSERT INTO dw.date_d (full_date, [year], [month], [date], time_of_year, [weekday], is_weekend)
 SELECT 
     CurrentDate AS full_date,
     YEAR(CurrentDate) AS [year],
