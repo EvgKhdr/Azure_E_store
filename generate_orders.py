@@ -5,8 +5,7 @@ import csv
 
 
 
-def multiple_orders_generation(seed):
-    orders_columns =  ['Order_ID','Customer_ID','Product_ID', 'Quantity', 'Delivery_Method', 'Discount', 'Payment method', 'Shipping fee'] 
+def multiple_orders_generation(seed): 
     Faker.seed(seed)
     random.seed(seed)
     delivery_method = ['Courier', 'Post', 'Pickup Point', 'Pickup Locker']
@@ -39,7 +38,7 @@ def multiple_orders_generation(seed):
             discount = 0
         payment_method = order.random_element(elements=payment_methods)
         shipping_fee = round(random.uniform(0, 200),2)
-        time_of_completion = (str(random.randint(0,8))+' days, '+ str(random.randint(0,23))+' hours')
+        time_of_completion = (str(random.randint(0,8))+' days, '+ str(random.randint(1,23))+' hours')
         
         orders_df.loc[i, 'Order_ID'] = order_id
         orders_df.loc[i, 'Quantity'] = quantity
