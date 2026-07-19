@@ -19,22 +19,25 @@ def generate_event_sequence(event, products_id, customers_id):
     event_medium = event.random_element(medium)
     event_time = event.date_time_between(start_date=datetime.datetime(2025, 1, 1))
     event_session = event.bothify(text='????-####-####').upper()
-
-    rows.append([event_id, event_type, event_product, event_time, event_session, event_medium, event_user])
+    click_id = event_id+"00"
+    rows.append([click_id, event_type, event_product, event_time, event_session, event_medium, event_user])
 
     chance_sequence = random.randint(1, 10)
 
     if chance_sequence > 6:
         add_time = event.date_time_between(start_date=event_time + timedelta(seconds=2), end_date=event_time + timedelta(hours=1))
-        rows.append([event_id, 'add_to_cart', event_product, add_time, event_session, event_medium, event_user])
+        add_id = event_id+"01"
+        rows.append([add_id, 'add_to_cart', event_product, add_time, event_session, event_medium, event_user])
 
     if chance_sequence > 8:
+        checkout_id = event_id+"02"
         checkout_time = event.date_time_between(start_date=add_time + timedelta(seconds=2), end_date=add_time + timedelta(hours=2))
-        rows.append([event_id, 'checkout', event_product, checkout_time, event_session, event_medium, event_user])
+        rows.append([checkout_id, 'checkout', event_product, checkout_time, event_session, event_medium, event_user])
 
     if chance_sequence > 9:
+        purchase_id = event_id +"03"
         purchase_time = event.date_time_between(start_date=checkout_time + timedelta(seconds=2), end_date=checkout_time + timedelta(minutes=10))
-        rows.append([event_id, 'purchase', event_product, purchase_time, event_session, event_medium, event_user])
+        rows.append([purchase_id, 'purchase', event_product, purchase_time, event_session, event_medium, event_user])
 
     return rows
 

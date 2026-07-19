@@ -20,12 +20,12 @@ today_date = datetime.today().strftime('%Y/%m/%d')
 connection_string = os.getenv("AZURE_CONNECTION_STRING")
 container_name = "raw"
 blob_service_client = BlobServiceClient.from_connection_string(connection_string)
-starting_seed = 111
+starting_seed = 125
 NUMBER_OF_CUSTOMERS = 200
 NUMBER_OF_PRODUCTS = 50
 NUMBER_OF_EVENTS = 2000
 sleep_time = 30 #in seconds, delay between batches upload
-NUMBER_OF_BATCHES = 1 # how many batches will be uploaded into the Azure storage
+NUMBER_OF_BATCHES = 10 # how many batches will be uploaded into the Azure storage
 seeds_list = list(range(starting_seed, starting_seed+NUMBER_OF_BATCHES))
 
 def upload_to_azure(name, config, SEED):
@@ -41,30 +41,34 @@ def upload_to_azure(name, config, SEED):
         print(f"Failed to upload {name}: {e} with seed {SEED}")
 
 
-
-def upload_one_batch(NUMBER_OF_CUSTOMERS,NUMBER_OF_PRODUCTS,NUMBER_OF_EVENTS,SEED ):
+def upload_customers_products(NUMBER_OF_CUSTOMERS,NUMBER_OF_PRODUCTS,SEED):
     customers_df = multiple_customers_generation(NUMBER_OF_CUSTOMERS,SEED,start_signup_date, end_signup_date, countries)
     products_df = multiple_products_generation(NUMBER_OF_PRODUCTS,SEED)
+    customers_products_dict = {
+        "customers": {"df": customers_df, "path": "customers/"+today_date+"/"},
+        "products": {"df": products_df, "path": "products/"+today_date+"/"},
+    }
+    for name, config in customers_products_dict.items():
+        upload_to_azure(name, config, SEED)
+
+def upload_events_orders(NUMBER_OF_EVENTS,SEED ):
     events_df = multiple_events_generation(NUMBER_OF_EVENTS,SEED)
     orders_df = multiple_orders_generation(SEED)
 
-
-
-
-    data_dict = {
-        "customers": {"df": customers_df, "path": "customers/"+today_date+"/"},
-        "products": {"df": products_df, "path": "products/"+today_date+"/"},
+    events_orders_dict = {
         "events": {"df": events_df, "path": "events/"+today_date+"/"},
         "orders": {"df": orders_df, "path": "orders/"+today_date+"/"}
     }
-    for name, config in data_dict.items():
+    for name, config in events_orders_dict.items():
         upload_to_azure(name, config, SEED)
         
     
     
 def main_upload():
     for seed in seeds_list:
-        upload_one_batch(NUMBER_OF_CUSTOMERS,NUMBER_OF_PRODUCTS,NUMBER_OF_EVENTS,seed)
+        if seed == seeds_list[0]:
+            upload_customers_products(NUMBER_OF_CUSTOMERS,NUMBER_OF_PRODUCTS,seed)
+        upload_events_orders(NUMBER_OF_EVENTS,seed)
         time.sleep(sleep_time)
     print("Final upload completed")
 

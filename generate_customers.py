@@ -3,7 +3,7 @@ import pandas as pd
 import random
 
 def multiple_customers_generation(num_customers, seed, start_signup_date, end_signup_date, countries):
-    customers_columns = ['Name', 'Surname', 'Age', 'Email', 'Sex', 'Customer_ID', 'Country','City', 'Signup_date', 'Bonus_Points', 'Loyalty_level']
+    customers_columns = ['Name', 'Surname', 'Age', 'Email', 'Sex', 'Customer_ID', 'Country','City', 'Signup_date', 'Loyalty_level']
     Faker.seed(seed)
     random.seed(seed)
     customers_df = pd.DataFrame(columns=customers_columns)
@@ -48,7 +48,6 @@ def one_customer_generation(customer_country, start_signup_date, end_signup_date
         'Country': customer_country[-2:],  
         'City': city,
         'Signup_date': date,
-        'Bonus_Points': random.randint(0, 1000),
         'Loyalty_level': level
     }
     return customer_instance
