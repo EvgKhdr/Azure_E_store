@@ -20,9 +20,9 @@ CREATE TABLE dw.date_d(
     year INT NOT NULL,
     month INT NOT NULL,
     date INT NOT NULL,
-    time_of_year VARCHAR(10) CHECK (time_of_year IN ('Winter','Spring','Summer','Autumn')),
-    weekday VARCHAR(15) CHECK (weekday IN ('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday')),
-    is_weekend BIT
+    time_of_year VARCHAR(10) CHECK (time_of_year IN ('Winter','Spring','Summer','Autumn')) NOT NULL,
+    weekday VARCHAR(15) CHECK (weekday IN ('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday')) NOT NULL,
+    is_weekend BIT NOT NULL
 )
 GO
 
@@ -32,14 +32,13 @@ CREATE TABLE dw.customer_d(
     name VARCHAR(50) NOT NULL,
     surname VARCHAR(50) NOT NULL,
     age INT NOT NULL CHECK (age >= 16 AND age <= 100),
-    age_group VARCHAR(15) CHECK (age_group IN('Young','Middle-aged', 'Adult', 'Senior')),
-    email VARCHAR(60),
-    gender VARCHAR(6) CHECK (gender IN('Male', 'Female')),
-    country VARCHAR(30),
-    city VARCHAR(40),
+    age_group VARCHAR(15) CHECK (age_group IN('Young','Middle-aged', 'Adult', 'Senior')) NOT NULL,
+    email VARCHAR(60) NOT NULL,
+    gender VARCHAR(6) CHECK (gender IN('Male', 'Female')) NOT NULL,
+    country VARCHAR(30) NOT NULL,
+    city VARCHAR(40) NOT NULL,
     account_age INT NOT NULL,
-    bonus_points INT CHECK (bonus_points >=0 AND bonus_points<=1000),
-    loyalty_level VARCHAR(10) CHECK (loyalty_level IN ('Bronze', 'Silver', 'Gold', 'Platinum')),
+    loyalty_level VARCHAR(10) CHECK (loyalty_level IN ('Bronze', 'Silver', 'Gold', 'Platinum')) NOT NULL,
 )
 GO
 
@@ -66,11 +65,11 @@ GO
 CREATE TABLE dw.event_f(
     event_id INT IDENTITY(1, 1) NOT NULL PRIMARY KEY,
     event_bk VARCHAR(13) NOT NULL,
-    product_id INT FOREIGN KEY REFERENCES dw.product_d(product_id),
-    customer_id INT FOREIGN KEY REFERENCES dw.customer_d(customer_id),
-    event_time INT FOREIGN KEY REFERENCES dw.time_d(time_id),
-    event_date INT FOREIGN KEY REFERENCES dw.date_d(date_id),
-    event_attr_id INT FOREIGN KEY REFERENCES dw.event_attr_d(event_attr_id)
+    product_id INT FOREIGN KEY REFERENCES dw.product_d(product_id) NOT NULL,
+    customer_id INT FOREIGN KEY REFERENCES dw.customer_d(customer_id) NOT NULL,
+    event_time INT FOREIGN KEY REFERENCES dw.time_d(time_id) NOT NULL,
+    event_date INT FOREIGN KEY REFERENCES dw.date_d(date_id) NOT NULL,
+    event_attr_id INT FOREIGN KEY REFERENCES dw.event_attr_d(event_attr_id) NOT NULL
 )
 GO
 
@@ -91,24 +90,16 @@ CREATE TABLE dw.order_f(
     total_cost DECIMAL (8,2) NOT NULL,
     shipping DECIMAL(6,2) NOT NULL,
     time_of_completion_hours INT NOT NULL,
-    order_date INT FOREIGN KEY REFERENCES dw.date_d(date_id),
-    order_time INT FOREIGN KEY REFERENCES dw.time_d(time_id),
-    product_id INT FOREIGN KEY REFERENCES dw.product_d(product_id),
-    customer_id  INT FOREIGN KEY REFERENCES dw.customer_d(customer_id),
-    order_attr_id  INT FOREIGN KEY REFERENCES dw.order_attr_d(order_attr_id)
+    order_date INT FOREIGN KEY REFERENCES dw.date_d(date_id) NOT NULL,
+    order_time INT FOREIGN KEY REFERENCES dw.time_d(time_id) NOT NULL,
+    product_id INT FOREIGN KEY REFERENCES dw.product_d(product_id) NOT NULL,
+    customer_id  INT FOREIGN KEY REFERENCES dw.customer_d(customer_id) NOT NULL,
+    order_attr_id  INT FOREIGN KEY REFERENCES dw.order_attr_d(order_attr_id) NOT NULL
 )
 
 GO
 
 
-DROP TABLE IF EXISTS dw.order_f;
-DROP TABLE IF EXISTS dw.event_f;
 
-DROP TABLE IF EXISTS dw.order_attr_d;
-DROP TABLE IF EXISTS dw.event_attr_d;
-DROP TABLE IF EXISTS dw.product_d;
-DROP TABLE IF EXISTS dw.customer_d;
-DROP TABLE IF EXISTS dw.date_d;
-DROP TABLE IF EXISTS dw.time_d;
 
 
